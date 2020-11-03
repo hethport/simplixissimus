@@ -92,7 +92,7 @@ export function XmlNodeButton({node, toggleNode, currentNode}: IProps): JSX.Elem
                             ? <div key={index} className="xmlLine">
                                 <XmlNodeButton node={childNode} toggleNode={toggleNode} currentNode={currentNode}/>
                             </div>
-                            : renderPcDataNode(childNode)
+                            : <span key={index}> {renderPcDataNode(childNode)}</span>
                     )}
                     {endButton}
                 </>

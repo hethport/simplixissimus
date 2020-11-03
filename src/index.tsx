@@ -3,10 +3,36 @@ import ReactDOM from 'react-dom';
 import './index.sass';
 import {App} from './App';
 import {reportWebVitals} from './reportWebVitals';
+import i18next from "i18next";
+import {I18nextProvider, initReactI18next} from "react-i18next";
+import {BrowserRouter} from 'react-router-dom';
+
+import resources_de from './locales/resources_de.json';
+import resources_en from './locales/resources_en.json';
+
+
+i18next
+    .use(initReactI18next)
+    .init({
+        resources: {
+            de: resources_de,
+            en: resources_en,
+        },
+        lng: 'en',
+        fallbackLng: 'en',
+        interpolation: {
+            escapeValue: false
+        }
+    })
+
 
 ReactDOM.render(
     <React.StrictMode>
-        <App/>
+        <I18nextProvider i18n={i18next}>
+            <BrowserRouter>
+                <App/>
+            </BrowserRouter>
+        </I18nextProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );
