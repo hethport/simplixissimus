@@ -1,13 +1,16 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {useState} from 'react';
 import {XmlEditor} from "./XmlEditor";
-import {MyXmlElementNode, MyXmlNode, readXmlFile, readXmlString} from "./xmlModel";
-import {kbo_11_51_xml} from "./kbo_11.51.xml";
+import {configFormUrl, configsUrl, editorUrl, homeUrl} from './urls';
+import {Link, Redirect, Route, Switch} from 'react-router-dom';
+import {Configs} from './Configs';
+import {ConfigForm} from './ConfigForm';
+import {Home} from './Home';
+import {MyXmlElementNode, MyXmlNode, readXmlString} from "./xmlModel";
+import {kbo_11_51_xml} from "./dummyData/kbo_11.51.xml";
 import {useTranslation} from "react-i18next";
-import {homeUrl} from './urls';
-import {Link} from 'react-router-dom';
+
 
 interface IState {
-    selectedFile?: File;
     readDocument?: MyXmlNode;
 }
 
@@ -20,27 +23,8 @@ export function App(): JSX.Element {
         readDocument: readXmlString(kbo_11_51_xml)
     });
 
-    function handleFileSelect(event: ChangeEvent<HTMLInputElement>): void {
-        const fileList = event.target.files;
-
-        if (fileList && fileList.length > 0) {
-            setState((currentState) => {
-                return {...currentState, selectedFile: fileList[0]};
-            });
-        }
-    }
-
-    async function readTheFile(): Promise<void> {
-        if (!state.selectedFile) {
-            alert(t('Sie haben keine Datei ausgewählt!'));
-            return;
-        }
-
-        const readDocument = await readXmlFile(state.selectedFile);
-
-        setState((currentState) => {
-            return {...currentState, readDocument};
-        });
+    function onFileRead(readDocument: MyXmlNode): void {
+        setState({readDocument});
     }
 
     return <>
@@ -49,24 +33,27 @@ export function App(): JSX.Element {
                 <Link to={homeUrl} className="navbar-item">SimpliXissimus</Link>
             </div>
 
-            <div className="navbar-end">
-                <div className="navbar-item">
-                    <div className="field has-addons">
-                        <div className="control is-expanded">
-                            <input type="file" className="input" onChange={handleFileSelect}/>
-                        </div>
-                        <div className="control">
-                            <button type="button" onClick={readTheFile} className="button is-link">Datei einlesen
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div className="navbar-start">
+                {state.readDocument && <Link to={editorUrl} className="navbar-item">{t('Editor')}</Link>}
+                <Link to={configsUrl} className="navbar-item">{t('Konfigurationen')}</Link>
             </div>
         </nav>
 
         <div className="container is-fluid">
-            {state.readDocument && <XmlEditor readDocument={state.readDocument as MyXmlElementNode}/>}
+            <Switch>
+                <Route exact path={homeUrl}>
+                    <Home onFileRead={onFileRead}/>
+                </Route>
+                <Route path={editorUrl}>
+                    {state.readDocument
+                        ? <XmlEditor readDocument={state.readDocument as MyXmlElementNode}/>
+                        : <Redirect to={homeUrl}/>}
+                </Route>
+                <Route path={configsUrl} component={Configs}/>
+                <Route path={configFormUrl} component={ConfigForm}/>
+            </Switch>
         </div>
     </>
+
 }
 

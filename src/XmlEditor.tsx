@@ -33,8 +33,7 @@ export function XmlEditor({readDocument}: IProps): JSX.Element {
         <div className="columns">
             <div className="column">
                 <div className="xmlEditor">
-                    <XmlNodeButton node={readDocument as MyXmlElementNode} toggleNode={handleNodeClick}
-                                   currentNode={state.editedNode}/>
+                    <XmlNodeButton node={readDocument} toggleNode={handleNodeClick} currentNode={state.editedNode}/>
                 </div>
             </div>
             <div className="column">

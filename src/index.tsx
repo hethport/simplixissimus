@@ -11,6 +11,7 @@ import resources_de from './locales/resources_de.json';
 import resources_en from './locales/resources_en.json';
 
 
+// noinspection JSIgnoredPromiseFromCall
 i18next
     .use(initReactI18next)
     .init({
@@ -23,7 +24,7 @@ i18next
         interpolation: {
             escapeValue: false
         }
-    })
+    });
 
 
 ReactDOM.render(
