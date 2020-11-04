@@ -6,9 +6,11 @@ import {reportWebVitals} from './reportWebVitals';
 import i18next from "i18next";
 import {I18nextProvider, initReactI18next} from "react-i18next";
 import {BrowserRouter} from 'react-router-dom';
+import {Provider} from 'react-redux';
 
 import resources_de from './locales/resources_de.json';
 import resources_en from './locales/resources_en.json';
+import {store} from "./store";
 
 
 // noinspection JSIgnoredPromiseFromCall
@@ -30,9 +32,11 @@ i18next
 ReactDOM.render(
     <React.StrictMode>
         <I18nextProvider i18n={i18next}>
-            <BrowserRouter>
-                <App/>
-            </BrowserRouter>
+            <Provider store={store}>
+                <BrowserRouter>
+                    <App/>
+                </BrowserRouter>
+            </Provider>
         </I18nextProvider>
     </React.StrictMode>,
     document.getElementById('root')

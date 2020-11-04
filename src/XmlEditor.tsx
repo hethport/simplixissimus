@@ -1,44 +1,35 @@
-import React, {useState} from 'react';
-import {MyXmlElementNode} from "./xmlModel";
+import React from 'react';
+import {MyXmlDocument} from "./xmlModel";
 import './XmlEditor.sass';
-import {XmlElementNodeEditForm} from "./XmlElementNodeEditForm";
-import {XmlNodeButton} from "./XmlNodeButton";
+import {XmlEditorPane} from './XmlEditorPane';
+import {useDispatch, useSelector} from "react-redux";
+import {openFileAction, selectActiveDocument, StoreAction} from "./store";
+import {Dispatch} from "redux";
+import {FilesMenu} from './FilesMenu';
+import {useTranslation} from "react-i18next";
 
-interface IState {
-    editedNode?: MyXmlElementNode;
-}
+export function XmlEditor(): JSX.Element {
 
-interface IProps {
-    readDocument: MyXmlElementNode;
-}
+    const {t} = useTranslation();
 
-export function XmlEditor({readDocument}: IProps): JSX.Element {
+    const maybeDocument: MyXmlDocument | undefined = useSelector(selectActiveDocument);
 
-    const [state, setState] = useState<IState>({});
+    const dispatch = useDispatch<Dispatch<StoreAction>>();
 
-    function handleNodeClick(node: MyXmlElementNode): void {
-        setState((currentState) => {
-            const editedNode = currentState.editedNode && currentState.editedNode === node ? undefined : node;
-            return {...currentState, editedNode};
-        });
-    }
-
-    function handleNodeUpdate(node: MyXmlElementNode): void {
-        setState((currentState) => {
-            return {...currentState, editedNode: node};
-        });
+    if (maybeDocument) {
+        dispatch(openFileAction(maybeDocument.name));
     }
 
     return (
         <div className="columns">
-            <div className="column">
-                <div className="xmlEditor">
-                    <XmlNodeButton node={readDocument} toggleNode={handleNodeClick} currentNode={state.editedNode}/>
-                </div>
+            <div className="column is-1">
+                <FilesMenu/>
             </div>
             <div className="column">
-                {state.editedNode &&
-                <XmlElementNodeEditForm node={state.editedNode} updateNode={handleNodeUpdate}/>}
+                {maybeDocument
+                    ? <XmlEditorPane document={maybeDocument}/>
+                    : <div className="notification is-warning has-text-centered">{t('no_document_open')}</div>
+                }
             </div>
         </div>
     );

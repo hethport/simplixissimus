@@ -1,20 +1,23 @@
 import React, {ChangeEvent, useState} from 'react';
-import {MyXmlNode, readXmlFile} from "./xmlModel";
+import {MyXmlDocument} from "./xmlModel";
 import {useTranslation} from "react-i18next";
+import {useDispatch} from "react-redux";
+import {readFileAction, StoreAction} from "./store";
+import {Dispatch} from "redux";
+import {readXmlFile} from "./xmlReader";
 
 interface IState {
     selectedFile?: File;
 }
 
-interface IProps {
-    onFileRead: (readDocument: MyXmlNode) => void;
-}
 
-export function Home({onFileRead}: IProps): JSX.Element {
+export function Home(): JSX.Element {
 
     const {t} = useTranslation();
 
     const [state, setState] = useState<IState>({});
+
+    const dispatch: Dispatch<StoreAction> = useDispatch<Dispatch<StoreAction>>();
 
     function handleFileSelect(event: ChangeEvent<HTMLInputElement>): void {
         const fileList = event.target.files;
@@ -33,23 +36,26 @@ export function Home({onFileRead}: IProps): JSX.Element {
             return;
         }
 
-        const readDocument = await readXmlFile(state.selectedFile);
+        const readDocument: MyXmlDocument = await readXmlFile(state.selectedFile);
 
-        onFileRead(readDocument);
+        dispatch(readFileAction(readDocument));
     }
 
+    return (
+        <div className="container">
 
-    return <div className="container">
 
-        <div className="field has-addons">
-            <div className="control is-expanded">
-                <input type="file" className="input" onChange={handleFileSelect}/>
+            <h2 className="subtitle is-4">{t('Datei öffnen')}</h2>
+            <div className="field has-addons">
+                <div className="control is-expanded">
+                    <input type="file" className="input" onChange={handleFileSelect}/>
+                </div>
+                <div className="control">
+                    <button type="button" onClick={readTheFile} className="button is-link">{t('Datei öffnen')}
+                    </button>
+                </div>
             </div>
-            <div className="control">
-                <button type="button" onClick={readTheFile} className="button is-link">Datei einlesen
-                </button>
-            </div>
+
         </div>
-
-    </div>
+    );
 }

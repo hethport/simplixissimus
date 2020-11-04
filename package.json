@@ -14,8 +14,10 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-i18next": "^11.7.3",
+    "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
+    "redux": "^4.0.5",
     "web-vitals": "^0.2.4",
     "yup": "^0.29.3"
   },
@@ -26,10 +28,12 @@
     "@types/parsimmon": "^1.10.4",
     "@types/react": "^16.9.55",
     "@types/react-dom": "^16.9.9",
+    "@types/react-redux": "^7.1.11",
     "@types/react-router-dom": "^5.1.6",
     "@types/yup": "^0.29.9",
     "i18next-parser": "^3.3.0",
     "node-sass": "4.14.1",
+    "redux-devtools-extension": "^2.13.8",
     "typescript": "^4.0.5"
   },
   "scripts": {
