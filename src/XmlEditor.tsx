@@ -3,11 +3,10 @@ import {MyXmlDocument} from "./xmlModel";
 import './XmlEditor.sass';
 import {XmlEditorPane} from './XmlEditorPane';
 import {useDispatch, useSelector} from "react-redux";
-import {selectActiveDocument} from "./store/store";
-import {Dispatch} from "redux";
+import {AppThunkDispatch, selectActiveDocument} from "./store/store";
 import {FilesMenu} from './FilesMenu';
 import {useTranslation} from "react-i18next";
-import {openFileAction, StoreAction} from "./store/actions";
+import {openFileAction} from "./store/actions";
 
 export function XmlEditor(): JSX.Element {
 
@@ -15,7 +14,7 @@ export function XmlEditor(): JSX.Element {
 
     const maybeDocument: MyXmlDocument | undefined = useSelector(selectActiveDocument);
 
-    const dispatch = useDispatch<Dispatch<StoreAction>>();
+    const dispatch = useDispatch<AppThunkDispatch>();
 
     if (maybeDocument) {
         dispatch(openFileAction(maybeDocument.name));

@@ -4,8 +4,8 @@ import {useTranslation} from "react-i18next";
 import {ConfigFormValues, configSchema, convertToConfig} from "./config";
 import classNames from "classnames";
 import {useDispatch} from "react-redux";
-import {Dispatch} from "redux";
-import {addConfigAction, StoreAction} from "./store/actions";
+import {addConfigAction} from "./store/actions";
+import {AppThunkDispatch} from "./store/store";
 
 export function ConfigForm(): JSX.Element {
 
@@ -13,7 +13,7 @@ export function ConfigForm(): JSX.Element {
 
     const [configSaved, setConfigSaved] = useState<boolean>(false);
 
-    const dispatch = useDispatch<Dispatch<StoreAction>>();
+    const dispatch = useDispatch<AppThunkDispatch>();
 
     const initialValue: ConfigFormValues = {name: '', inlineElements: ''};
 

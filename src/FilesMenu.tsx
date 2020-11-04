@@ -2,11 +2,10 @@ import React, {ChangeEvent, createRef} from "react";
 import classNames from "classnames";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {allDocumentsSelector, currentDocumentNameSelector} from "./store/store";
+import {allDocumentsSelector, AppThunkDispatch, currentDocumentNameSelector} from "./store/store";
 import {MyXmlDocument} from "./xmlModel";
-import {Dispatch} from "redux";
 import {readXmlFile} from "./xmlReader";
-import {openFileAction, readFileAction, StoreAction} from "./store/actions";
+import {openFileAction, readFileAction} from "./store/actions";
 
 export function FilesMenu(): JSX.Element {
 
@@ -14,7 +13,7 @@ export function FilesMenu(): JSX.Element {
 
     const fileInputRef = createRef<HTMLInputElement>();
 
-    const dispatch = useDispatch<Dispatch<StoreAction>>();
+    const dispatch = useDispatch<AppThunkDispatch>();
 
     const activeDocumentName: string | undefined = useSelector(currentDocumentNameSelector);
     const openedFiles: MyXmlDocument[] = useSelector(allDocumentsSelector);

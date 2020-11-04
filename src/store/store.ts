@@ -1,18 +1,17 @@
-import {createStore} from "redux";
+import {applyMiddleware, createStore, Store} from "redux";
 import {MyXmlDocument} from "../xmlModel";
-import {kbo_11_51} from "../dummyData/kbo_11.51.xml";
 import {composeWithDevTools} from "redux-devtools-extension";
 import {Config} from "../config";
-import {
-    readInitialStore,
-    saveConfigToLocalStorage,
-    saveFileToLocalStorage,
-    setCurrentOpenFileInLocalStorage
-} from '../localStorageHelpers';
+import thunk, {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {ADD_CONFIG, addConfigAction, OPEN_FILE, READ_FILE, readFileAction, StoreAction} from "./actions";
 import {tlh_dig_config} from "../dummyData/dummyConfigs";
+import {getAllConfigsFromIndexedDB, getAllOpenedFilesFromIndexedDB} from "../db";
+import {kbo_11_51} from "../dummyData/kbo_11.51.xml";
 
 // Root reducer
+
+export type AppThunkDispatch = ThunkDispatch<StoreState, unknown, StoreAction>;
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, StoreState, unknown, StoreAction>;
 
 export interface StoreState {
     currentFileName?: string;
@@ -26,17 +25,14 @@ export function rootReducer(
 ): StoreState {
     switch (action.type) {
         case READ_FILE:
-            saveFileToLocalStorage(action.readFile);
             return {
                 ...state, openedFiles: [...state.openedFiles, action.readFile], currentFileName: action.readFile.name
             };
         case OPEN_FILE:
-            setCurrentOpenFileInLocalStorage(action.fileName);
             return {
                 ...state, currentFileName: action.fileName
             };
         case ADD_CONFIG:
-            saveConfigToLocalStorage(action.config);
             return {
                 ...state, configs: [...state.configs, action.config]
             };
@@ -71,15 +67,43 @@ export function allConfigs(store: StoreState): Config[] {
 
 // Store
 
-const initialStore = readInitialStore();
+const currentFileLocalStorageKey = 'currentFile';
 
-export const store = createStore(rootReducer, initialStore, composeWithDevTools());
-
-if (process.env.NODE_ENV === 'development') {
-    if (initialStore.openedFiles.length === 0) {
-        store.dispatch(readFileAction(kbo_11_51));
-    }
-    if (initialStore.configs.length === 0) {
-        store.dispatch(addConfigAction(tlh_dig_config));
-    }
+export function setCurrentOpenFileInLocalStorage(fileName: string): void {
+    localStorage.setItem(currentFileLocalStorageKey, fileName);
 }
+
+// Read store
+
+export async function readInitialStore(): Promise<StoreState> {
+    const currentFileName = localStorage.getItem(currentFileLocalStorageKey) || undefined;
+
+    const openedFiles = await getAllOpenedFilesFromIndexedDB();
+    const configs = await getAllConfigsFromIndexedDB();
+
+    return {currentFileName, openedFiles, configs};
+}
+
+
+export const store: Store<StoreState, StoreAction> & { dispatch: AppThunkDispatch } = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+
+readInitialStore().then((initialStore) => {
+    // Load initial data
+
+    if (process.env.NODE_ENV === 'development') {
+        if (initialStore.openedFiles.length === 0) {
+            initialStore.openedFiles = [kbo_11_51];
+        }
+        if (initialStore.configs.length === 0) {
+            initialStore.configs = [tlh_dig_config];
+        }
+    }
+
+    initialStore.openedFiles.forEach((openedFile) => {
+        store.dispatch(readFileAction(openedFile))
+    });
+
+    initialStore.configs.forEach((config) => {
+        store.dispatch(addConfigAction(config))
+    });
+});
