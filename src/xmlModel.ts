@@ -19,29 +19,34 @@ export function readFileContent(file: File): Promise<string> {
 
 // Model
 
-export class MyXmlPCData {
-    constructor(public content: string) {}
+export interface MyXmlAttribute {
+    key: string;
+    value: string;
 }
 
-export class MyXmlAttribute {
-    constructor(
-        public key: string,
-        public value: string
-    ) {}
 
-    charCount(): number {
-        return this.key.length + (this.value.length > maxAttrLength ? 3 : this.value.length);
-    }
+export interface MyXmlPCData {
+    type: '#PCDATA';
+    content: string;
 }
 
-export class MyXmlElementNode {
-    constructor(
-        public tagName: string,
-        public childNodes: MyXmlNode[],
-        public attributes: MyXmlAttribute[],
-        public isEmpty: boolean = false
-    ) {}
+export function isPcData(node: MyXmlNode): node is MyXmlPCData {
+    return node.type === '#PCDATA';
 }
+
+
+export interface MyXmlElementNode {
+    type: 'Node';
+    tagName: string;
+    childNodes: MyXmlNode[];
+    attributes: MyXmlAttribute[];
+    isEmpty?: boolean;
+}
+
+export function isElementNode(node: MyXmlNode): node is MyXmlElementNode {
+    return node.type === 'Node';
+}
+
 
 export type MyXmlNode = MyXmlElementNode | MyXmlPCData;
 

@@ -2,10 +2,11 @@ import React, {ChangeEvent, createRef} from "react";
 import classNames from "classnames";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {allDocumentsSelector, currentDocumentNameSelector, openFileAction, readFileAction, StoreAction} from "./store";
+import {allDocumentsSelector, currentDocumentNameSelector} from "./store/store";
 import {MyXmlDocument} from "./xmlModel";
 import {Dispatch} from "redux";
 import {readXmlFile} from "./xmlReader";
+import {openFileAction, readFileAction, StoreAction} from "./store/actions";
 
 export function FilesMenu(): JSX.Element {
 

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {maxAttrLength, MyXmlAttribute, MyXmlElementNode, MyXmlPCData} from "./xmlModel";
+import {isElementNode, isPcData, maxAttrLength, MyXmlAttribute, MyXmlElementNode, MyXmlPCData} from "./xmlModel";
 import classnames from "classnames";
 
 function renderAttributes(attributes: MyXmlAttribute[]): string | null {
@@ -57,7 +57,7 @@ export function XmlNodeButton({node, toggleNode, currentNode}: IProps): JSX.Elem
             &lt;/{node.tagName}&gt;
         </div>;
 
-        if (node.childNodes.length === 1 && node.childNodes[0] instanceof MyXmlPCData) {
+        if (node.childNodes.length === 1 && isPcData(node.childNodes[0])) {
             return (
                 <div className="field has-addons">
                     <div className="control">{startButton}</div>
@@ -88,7 +88,7 @@ export function XmlNodeButton({node, toggleNode, currentNode}: IProps): JSX.Elem
                         </div>
                     </div>
                     {node.childNodes.map((childNode, index) =>
-                        childNode instanceof MyXmlElementNode
+                        isElementNode(childNode)
                             ? <div key={index} className="xmlLine">
                                 <XmlNodeButton node={childNode} toggleNode={toggleNode} currentNode={currentNode}/>
                             </div>

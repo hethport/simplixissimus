@@ -1,4 +1,8 @@
-export const kbo_11_51_xml: string = `
+import {MyXmlDocument, MyXmlElementNode} from "../xmlModel";
+import {readXmlString} from "../xmlReader";
+import {tlh_dig_config} from "./dummyConfigs";
+
+const kbo_11_51_xml: string = `
 <?xml-stylesheet href="HPMxml.css" type="text/css"?>
 <AOxml xmlns:AO="http://hethiter.net/ns/AO/1.0"
        xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
@@ -85,3 +89,9 @@ export const kbo_11_51_xml: string = `
     </div1>
   </body>
 </AOxml>`;
+
+export const kbo_11_51: MyXmlDocument = new MyXmlDocument(
+    "kbo 11.51.xml",
+    readXmlString(kbo_11_51_xml) as MyXmlElementNode,
+    tlh_dig_config.name
+);

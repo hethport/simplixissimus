@@ -1,7 +1,5 @@
 import {object as yupObject, ObjectSchema, string as yupString} from 'yup';
 
-const localStorageKey = 'configs';
-
 interface ReplaceElementConfig {
     keyTag: string;
     replaceWith: string;
@@ -11,26 +9,6 @@ export interface Config {
     name: string;
     inlineElements: string[];
     replaceElements: ReplaceElementConfig[];
-}
-
-
-export function loadConfigsFromLocalStorage(): Config[] {
-    const configs: string | null = localStorage.getItem(localStorageKey);
-
-    return configs ? JSON.parse(configs) : [];
-}
-
-export function saveConfig(config: Config) {
-    const configs = loadConfigsFromLocalStorage();
-
-    if (configs.filter((c) => c.name === config.name).length !== 0) {
-        // Config already exists!
-        return false;
-    } else {
-        configs.push(config);
-        localStorage.setItem(localStorageKey, JSON.stringify(configs));
-        return true;
-    }
 }
 
 // Creation

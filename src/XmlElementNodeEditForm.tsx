@@ -1,5 +1,5 @@
 import React from 'react';
-import {MyXmlAttribute, MyXmlElementNode, MyXmlNode} from "./xmlModel";
+import {isElementNode, MyXmlAttribute, MyXmlElementNode, MyXmlNode} from "./xmlModel";
 import {useTranslation} from "react-i18next";
 import classnames from 'classnames';
 
@@ -14,7 +14,7 @@ export function XmlElementNodeEditForm({node, updateNode}: IProps) {
     const {t} = useTranslation('common');
 
     function addAttribute() {
-        node.attributes.push(new MyXmlAttribute('', ''));
+        node.attributes.push({key: '', value: ''});
         updateNode(node);
     }
 
@@ -61,7 +61,7 @@ export function XmlElementNodeEditForm({node, updateNode}: IProps) {
             <div key={index} className={classnames('field is-grouped')}>
                 <div className="control is-expanded">
                     <button type="button" className="button is-static is-fullwidth">
-                        {node instanceof MyXmlElementNode
+                        {isElementNode(node)
                             ? <span>&lt;{node.tagName}&gt;...&lt;{node.tagName}&gt;</span>
                             : node.content}
                     </button>

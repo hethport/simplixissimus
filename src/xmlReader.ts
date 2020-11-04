@@ -1,22 +1,24 @@
 import {MyXmlAttribute, MyXmlDocument, MyXmlElementNode, MyXmlNode, MyXmlPCData, readFileContent} from "./xmlModel";
 
 function readAttribute(attr: Attr): MyXmlAttribute {
-    return new MyXmlAttribute(attr.name, attr.value);
+    return {key: attr.name, value: attr.value};
 }
 
 function convertNodeToMyXmlNode(node: Node): MyXmlNode | undefined {
     if (node instanceof Element) {
-        return new MyXmlElementNode(
-            node.tagName,
-            Array.from(node.childNodes).flatMap((c) => {
+        return {
+            type: 'Node',
+            tagName: node.tagName,
+            childNodes: Array.from(node.childNodes).flatMap((c) => {
                 const converted = convertNodeToMyXmlNode(c);
                 return converted ? [converted] : [];
             }),
-            Array.from(node.attributes).map(readAttribute),
-            node.childNodes.length === 0
-        )
+            attributes: Array.from(node.attributes).map(readAttribute),
+            isEmpty: node.childNodes.length === 0
+        };
     } else if (node instanceof CharacterData) {
-        return node.data.trim().length === 0 ? undefined : new MyXmlPCData(node.data);
+        const pcData: MyXmlPCData = {type: '#PCDATA', content: node.data};
+        return node.data.trim().length === 0 ? undefined : pcData;
     } else {
         console.error(JSON.stringify(node, null, 2));
         throw new Error('TODO!');

@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 import {configFormUrl} from './urls';
 import {useSelector} from "react-redux";
-import {allConfigs} from "./store";
+import {allConfigs} from "./store/store";
 
 export function Configs(): JSX.Element {
 

@@ -3,10 +3,11 @@ import {MyXmlDocument} from "./xmlModel";
 import './XmlEditor.sass';
 import {XmlEditorPane} from './XmlEditorPane';
 import {useDispatch, useSelector} from "react-redux";
-import {openFileAction, selectActiveDocument, StoreAction} from "./store";
+import {selectActiveDocument} from "./store/store";
 import {Dispatch} from "redux";
 import {FilesMenu} from './FilesMenu';
 import {useTranslation} from "react-i18next";
+import {openFileAction, StoreAction} from "./store/actions";
 
 export function XmlEditor(): JSX.Element {
 

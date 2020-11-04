@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import {ErrorMessage, Field, Form, Formik, FormikHelpers} from 'formik';
 import {useTranslation} from "react-i18next";
-import {ConfigFormValues, configSchema, convertToConfig, saveConfig} from "./config";
+import {ConfigFormValues, configSchema, convertToConfig} from "./config";
 import classNames from "classnames";
+import {useDispatch} from "react-redux";
+import {Dispatch} from "redux";
+import {addConfigAction, StoreAction} from "./store/actions";
 
 export function ConfigForm(): JSX.Element {
 
@@ -10,14 +13,16 @@ export function ConfigForm(): JSX.Element {
 
     const [configSaved, setConfigSaved] = useState<boolean>(false);
 
+    const dispatch = useDispatch<Dispatch<StoreAction>>();
+
     const initialValue: ConfigFormValues = {name: '', inlineElements: ''};
 
     function onSubmit(values: ConfigFormValues, {setSubmitting}: FormikHelpers<ConfigFormValues>): void {
         const config = convertToConfig(values);
 
-        const newConfigSaved = saveConfig(config);
+        dispatch(addConfigAction(config));
 
-        setConfigSaved(newConfigSaved);
+        setConfigSaved(true);
 
         setSubmitting(false);
     }

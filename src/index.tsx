@@ -10,7 +10,7 @@ import {Provider} from 'react-redux';
 
 import resources_de from './locales/resources_de.json';
 import resources_en from './locales/resources_en.json';
-import {store} from "./store";
+import {store} from "./store/store";
 
 
 // noinspection JSIgnoredPromiseFromCall
