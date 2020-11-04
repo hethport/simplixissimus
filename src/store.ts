@@ -4,6 +4,7 @@ import {readXmlString} from "./xmlReader";
 import {kbo_11_51_xml} from "./dummyData/kbo_11.51.xml";
 import {composeWithDevTools} from "redux-devtools-extension";
 
+const isDev: boolean = process.env.NODE_ENV === 'development';
 
 const defaultFile = new MyXmlDocument("kbo 11.51.xml", readXmlString(kbo_11_51_xml) as MyXmlElementNode);
 
@@ -44,7 +45,7 @@ export function rootReducer(
     switch (action.type) {
         case READ_FILE:
             return {
-                ...state, openedFiles: [...state.openedFiles, action.payload],
+                ...state, openedFiles: [...state.openedFiles, action.payload], currentFileName: action.payload.name
             };
         case OPEN_FILE:
             return {
@@ -77,7 +78,8 @@ export function selectDocumentByName(store: StoreState, name: string): MyXmlDocu
 
 // Store
 
-export const store = createStore(rootReducer, {
-    currentFileName: defaultFile.name,
-    openedFiles: [defaultFile]
-}, composeWithDevTools());
+const initialState: StoreState = isDev
+    ? {currentFileName: defaultFile.name, openedFiles: [defaultFile]}
+    : {openedFiles: []};
+
+export const store = createStore(rootReducer, initialState, composeWithDevTools());

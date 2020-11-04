@@ -1,14 +1,17 @@
-import React from "react";
+import React, {ChangeEvent, createRef} from "react";
 import classNames from "classnames";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {allDocumentsSelector, currentDocumentNameSelector, openFileAction, StoreAction} from "./store";
+import {allDocumentsSelector, currentDocumentNameSelector, openFileAction, readFileAction, StoreAction} from "./store";
 import {MyXmlDocument} from "./xmlModel";
 import {Dispatch} from "redux";
+import {readXmlFile} from "./xmlReader";
 
 export function FilesMenu(): JSX.Element {
 
     const {t} = useTranslation();
+
+    const fileInputRef = createRef<HTMLInputElement>();
 
     const dispatch = useDispatch<Dispatch<StoreAction>>();
 
@@ -23,6 +26,21 @@ export function FilesMenu(): JSX.Element {
         return !!activeDocumentName && fileName === activeDocumentName;
     }
 
+    function handlePlusButtonClick(): void {
+        fileInputRef.current!.click();
+    }
+
+
+    async function handleFileInputChange(event: ChangeEvent<HTMLInputElement>): Promise<void> {
+        const fileList = event.target.files;
+
+        if (fileList && fileList.length > 0) {
+            const readDocument: MyXmlDocument = await readXmlFile(fileList[0]);
+
+            dispatch(readFileAction(readDocument));
+        }
+    }
+
     return (
         <div className="panel">
             <p className="panel-heading">{t('Geöffnete Dateien')}</p>
@@ -33,7 +51,8 @@ export function FilesMenu(): JSX.Element {
                 </div>
             )}
             <div className="panel-block">
-                <button className="button is-info is-fullwidth" type="button" disabled={true}>+</button>
+                <input hidden={true} type="file" ref={fileInputRef} onChange={handleFileInputChange}/>
+                <button className="button is-info is-fullwidth" type="button" onClick={handlePlusButtonClick}>+</button>
             </div>
         </div>
     );
