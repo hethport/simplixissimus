@@ -3,6 +3,7 @@ import {MyXmlDocument, MyXmlElementNode} from "./xmlModel";
 import {readXmlString} from "./xmlReader";
 import {kbo_11_51_xml} from "./dummyData/kbo_11.51.xml";
 import {composeWithDevTools} from "redux-devtools-extension";
+import {Config, loadConfigsFromLocalStorage} from "./config";
 
 const isDev: boolean = process.env.NODE_ENV === 'development';
 
@@ -36,10 +37,11 @@ export type StoreAction = ReadFileAction | OpenFileAction;
 export interface StoreState {
     currentFileName?: string;
     openedFiles: MyXmlDocument[];
+    configs: Config[];
 }
 
 export function rootReducer(
-    state: StoreState = {openedFiles: []},
+    state: StoreState = {openedFiles: [], configs: []},
     action: StoreAction
 ): StoreState {
     switch (action.type) {
@@ -76,10 +78,22 @@ export function selectDocumentByName(store: StoreState, name: string): MyXmlDocu
     return store.openedFiles.find((d) => d.name === name);
 }
 
+export function allConfigs(store: StoreState): Config[] {
+    return store.configs;
+}
+
 // Store
 
-const initialState: StoreState = isDev
-    ? {currentFileName: defaultFile.name, openedFiles: [defaultFile]}
-    : {openedFiles: []};
+function getInitialState(): StoreState | undefined {
+    if (isDev) {
+        return {
+            currentFileName: defaultFile.name,
+            openedFiles: [defaultFile],
+            configs: loadConfigsFromLocalStorage()
+        }
+    } else {
+        return undefined;
+    }
+}
 
-export const store = createStore(rootReducer, initialState, composeWithDevTools());
+export const store = createStore(rootReducer, getInitialState(), composeWithDevTools());

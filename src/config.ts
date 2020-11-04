@@ -13,14 +13,15 @@ export interface Config {
     replaceElements: ReplaceElementConfig[];
 }
 
-export function getConfigs(): Config[] {
+
+export function loadConfigsFromLocalStorage(): Config[] {
     const configs: string | null = localStorage.getItem(localStorageKey);
 
     return configs ? JSON.parse(configs) : [];
 }
 
 export function saveConfig(config: Config) {
-    const configs = getConfigs();
+    const configs = loadConfigsFromLocalStorage();
 
     if (configs.filter((c) => c.name === config.name).length !== 0) {
         // Config already exists!

@@ -1,15 +1,16 @@
 import React from 'react';
-import {Config, getConfigs} from './config';
+import {Config} from './config';
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 import {configFormUrl} from './urls';
-
+import {useSelector} from "react-redux";
+import {allConfigs} from "./store";
 
 export function Configs(): JSX.Element {
 
     const {t} = useTranslation();
 
-    const configs: Config[] = getConfigs();
+    const configs: Config[] = useSelector(allConfigs);
 
     function renderConfigs(configs: Config[]): JSX.Element {
         return <table className="table is-fullwidth">
