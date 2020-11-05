@@ -29,17 +29,22 @@ export function XmlEditorPane({document}: IProps): JSX.Element {
     }
 
     return (
-        <div className="columns">
-            <div className="column">
-                <div className="xmlEditor">
-                    <XmlNodeButton node={document.rootNode} toggleNode={handleNodeClick}
-                                   currentNode={state.editedNode}/>
+        <div className="card">
+            <div className="card-header">
+                <p className="card-header-title">{document.name}</p>
+            </div>
+            <div className="card-content">
+                <div className="columns">
+                    <div className="column">
+                        <XmlNodeButton node={document.rootNode} toggleNode={handleNodeClick}
+                                       currentNode={state.editedNode}/>
+                    </div>
+                    <div className="column">
+                        {state.editedNode &&
+                        <XmlElementNodeEditForm node={state.editedNode} updateNode={handleNodeUpdate}/>}
+                    </div>
                 </div>
             </div>
-            <div className="column">
-                {state.editedNode &&
-                <XmlElementNodeEditForm node={state.editedNode} updateNode={handleNodeUpdate}/>}
-            </div>
         </div>
-    )
+    );
 }
