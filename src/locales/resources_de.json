@@ -1,9 +1,18 @@
 {
-  "Sie haben keine Datei ausgewählt!": "",
-  "Schlüssel": "",
-  "Wert": "",
-  "Tag": "",
-  "Attribute": "",
-  "Attribut hinzufügen": "",
-  "Kindelemente": ""
+  "Konfigurationen": "Konfigurationen",
+  "Neue Konfiguration erstellen": "Neue Konfiguration erstellen",
+  "Name": "Name",
+  "Inline Elemente": "Inline Elemente",
+  "Inline Elemente, getrennt durch Komma": "Inline Elemente, getrennt durch Komma",
+  "Konfiguration wurde erfolgreich gespeichert": "Konfiguration wurde erfolgreich gespeichert",
+  "Replacer": "Replacer",
+  "Keine Konfigurationen gefunden": "Keine Konfigurationen gefunden",
+  "Geöffnete Dateien": "Geöffnete Dateien",
+  "no_document_open": "Kein Dokument wurde geöffnet",
+  "Schlüssel": "Schlüssel",
+  "Wert": "Wert",
+  "Tag": "Tag",
+  "Attribute": "Attribute",
+  "Attribut hinzufügen": "Attribut hinzufügen",
+  "Kindelemente": "Kindelemente"
 }
