@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {XmlNodeButton} from "./XmlNodeButton";
 import {XmlElementNodeEditForm} from "./XmlElementNodeEditForm";
-import {MyXmlDocument, MyXmlElementNode} from "./xmlModel";
+import {MyXmlDocument, MyXmlElementNode} from "./model/xmlDocument";
 
 interface IState {
     editedNode?: MyXmlElementNode;

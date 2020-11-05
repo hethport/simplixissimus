@@ -1,9 +1,9 @@
 import Dexie, {Table} from 'dexie';
-import {Config} from "./config";
-import {MyXmlDocument} from "./xmlModel";
+import {Profile} from "./profile";
+import {MyXmlDocument} from "./xmlDocument";
 
 class MyDb extends Dexie {
-    public configsTable: Table<Config, string>;
+    public profilesTable: Table<Profile, string>;
     public openedFilesTable: Table<MyXmlDocument, string>;
 
     constructor() {
@@ -12,11 +12,11 @@ class MyDb extends Dexie {
         this
             .version(1)
             .stores({
-                configs: 'name',
+                profiles: 'name',
                 openedFiles: 'name'
             });
 
-        this.configsTable = this.table('configs');
+        this.profilesTable = this.table('profiles');
         this.openedFilesTable = this.table('openedFiles');
     }
 }
@@ -25,18 +25,18 @@ const myDb: MyDb = new MyDb();
 
 // Configs
 
-export function getConfigByNameFromIndexedDB(name: string): Promise<Config | undefined> {
-    return myDb.configsTable
+export function getConfigByNameFromIndexedDB(name: string): Promise<Profile | undefined> {
+    return myDb.profilesTable
         .filter((c) => c.name === name)
         .first();
 }
 
-export function getAllConfigsFromIndexedDB(): Promise<Config[]> {
-    return myDb.configsTable.toArray();
+export function getAllConfigsFromIndexedDB(): Promise<Profile[]> {
+    return myDb.profilesTable.toArray();
 }
 
-export function saveConfigToIndexedDB(config: Config): Promise<string> {
-    return myDb.configsTable.put(config);
+export function saveConfigToIndexedDB(config: Profile): Promise<string> {
+    return myDb.profilesTable.put(config);
 }
 
 // Opened files

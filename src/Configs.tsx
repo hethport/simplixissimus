@@ -1,5 +1,5 @@
 import React from 'react';
-import {Config} from './config';
+import {Profile} from './model/profile';
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 import {configFormUrl} from './urls';
@@ -10,9 +10,9 @@ export function Configs(): JSX.Element {
 
     const {t} = useTranslation();
 
-    const configs: Config[] = useSelector(allConfigs);
+    const configs: Profile[] = useSelector(allConfigs);
 
-    function renderConfigs(configs: Config[]): JSX.Element {
+    function renderConfigs(configs: Profile[]): JSX.Element {
         return <table className="table is-fullwidth">
             <thead>
                 <tr>

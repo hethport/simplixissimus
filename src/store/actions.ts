@@ -1,8 +1,8 @@
 import {Action} from "redux";
-import {MyXmlDocument} from "../xmlModel";
-import {Config} from "../config";
+import {MyXmlDocument} from "../model/xmlDocument";
+import {Profile} from "../model/profile";
 import {AppThunk, setCurrentOpenFileInLocalStorage} from "./store";
-import {saveConfigToIndexedDB, saveOpenedFileToIndexedDB} from "../db";
+import {saveConfigToIndexedDB, saveOpenedFileToIndexedDB} from "../model/db";
 
 export const READ_FILE = 'READ_FILE';
 export const OPEN_FILE = 'OPEN_FILE';
@@ -34,10 +34,10 @@ export function openFileAction(fileName: string): AppThunk {
 
 
 interface AddConfigAction extends Action<typeof ADD_CONFIG> {
-    config: Config;
+    config: Profile;
 }
 
-export function addConfigAction(config: Config): AppThunk {
+export function addConfigAction(config: Profile): AppThunk {
     return async (dispatch) => {
         await saveConfigToIndexedDB(config);
         dispatch({type: ADD_CONFIG, config});

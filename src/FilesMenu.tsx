@@ -3,8 +3,8 @@ import classNames from "classnames";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {allDocumentsSelector, AppThunkDispatch, currentDocumentNameSelector} from "./store/store";
-import {MyXmlDocument} from "./xmlModel";
-import {readXmlFile} from "./xmlReader";
+import {MyXmlDocument} from "./model/xmlDocument";
+import {readXmlFile} from "./model/xmlReader";
 import {openFileAction, readFileAction} from "./store/actions";
 
 export function FilesMenu(): JSX.Element {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {isElementNode, MyXmlAttribute, MyXmlElementNode, MyXmlNode} from "./xmlModel";
+import {isElementNode, MyXmlAttribute, MyXmlElementNode, MyXmlNode} from "./model/xmlDocument";
 import {useTranslation} from "react-i18next";
 import classnames from 'classnames';
 

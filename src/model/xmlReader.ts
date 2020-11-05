@@ -1,4 +1,4 @@
-import {MyXmlAttribute, MyXmlDocument, MyXmlElementNode, MyXmlNode, MyXmlPCData, readFileContent} from "./xmlModel";
+import {MyXmlAttribute, MyXmlDocument, MyXmlElementNode, MyXmlNode, MyXmlPCData, readFileContent} from "./xmlDocument";
 
 function readAttribute(attr: Attr): MyXmlAttribute {
     return {key: attr.name, value: attr.value};
@@ -26,7 +26,8 @@ function convertNodeToMyXmlNode(node: Node): MyXmlNode | undefined {
 }
 
 export function readXmlString(xmlContent: string): MyXmlNode {
-    const xmlDocument: XMLDocument = new DOMParser().parseFromString(xmlContent, 'application/xml');
+    const xmlDocument: XMLDocument = new DOMParser()
+        .parseFromString(xmlContent, 'application/xml');
 
     return convertNodeToMyXmlNode(xmlDocument.documentElement)!;
 }

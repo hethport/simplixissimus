@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {isElementNode, isPcData, maxAttrLength, MyXmlAttribute, MyXmlElementNode, MyXmlPCData} from "./xmlModel";
+import {isElementNode, isPcData, maxAttrLength, MyXmlAttribute, MyXmlElementNode, MyXmlPCData} from "./model/xmlDocument";
 import classnames from "classnames";
 
 function renderAttributes(attributes: MyXmlAttribute[]): string | null {

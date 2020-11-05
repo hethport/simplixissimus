@@ -1,11 +1,11 @@
 import {applyMiddleware, createStore, Store} from "redux";
-import {MyXmlDocument} from "../xmlModel";
+import {MyXmlDocument} from "../model/xmlDocument";
 import {composeWithDevTools} from "redux-devtools-extension";
-import {Config} from "../config";
+import {Profile} from "../model/profile";
 import thunk, {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {ADD_CONFIG, addConfigAction, OPEN_FILE, READ_FILE, readFileAction, StoreAction} from "./actions";
 import {tlh_dig_config} from "../dummyData/dummyConfigs";
-import {getAllConfigsFromIndexedDB, getAllOpenedFilesFromIndexedDB} from "../db";
+import {getAllConfigsFromIndexedDB, getAllOpenedFilesFromIndexedDB} from "../model/db";
 import {kbo_11_51} from "../dummyData/kbo_11.51.xml";
 
 // Root reducer
@@ -16,7 +16,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, StoreState, un
 export interface StoreState {
     currentFileName?: string;
     openedFiles: MyXmlDocument[];
-    configs: Config[];
+    configs: Profile[];
 }
 
 export function rootReducer(
@@ -61,7 +61,7 @@ export function selectDocumentByName(store: StoreState, name: string): MyXmlDocu
     return store.openedFiles.find((d) => d.name === name);
 }
 
-export function allConfigs(store: StoreState): Config[] {
+export function allConfigs(store: StoreState): Profile[] {
     return store.configs;
 }
 

@@ -1,5 +1,5 @@
-import {MyXmlDocument, MyXmlElementNode} from "../xmlModel";
-import {readXmlString} from "../xmlReader";
+import {MyXmlDocument, MyXmlElementNode} from "../model/xmlDocument";
+import {readXmlString} from "../model/xmlReader";
 import {tlh_dig_config} from "./dummyConfigs";
 
 const kbo_11_51_xml: string = `

@@ -1,5 +1,5 @@
 import React from 'react';
-import {MyXmlDocument} from "./xmlModel";
+import {MyXmlDocument} from "./model/xmlDocument";
 import './XmlEditor.sass';
 import {XmlEditorPane} from './XmlEditorPane';
 import {useDispatch, useSelector} from "react-redux";

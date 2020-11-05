@@ -5,7 +5,7 @@ interface ReplaceElementConfig {
     replaceWith: string;
 }
 
-export interface Config {
+export interface Profile {
     name: string;
     inlineElements: string[];
     replaceElements: ReplaceElementConfig[];
@@ -13,7 +13,7 @@ export interface Config {
 
 // Creation
 
-export interface ConfigFormValues {
+export interface ProfileFormValues {
     name: string;
     inlineElements: string;
 }
@@ -22,7 +22,7 @@ function getInlineElements(valueString: string): string[] {
     return valueString.split(',').map((s) => s.trim());
 }
 
-export const configSchema: ObjectSchema<ConfigFormValues> = yupObject<ConfigFormValues>()
+export const configSchema: ObjectSchema<ProfileFormValues> = yupObject<ProfileFormValues>()
     .shape({
         name: yupString()
             .min(4)
@@ -42,7 +42,7 @@ export const configSchema: ObjectSchema<ConfigFormValues> = yupObject<ConfigForm
     })
     .required();
 
-export function convertToConfig(configFormValue: ConfigFormValues): Config {
+export function convertToConfig(configFormValue: ProfileFormValues): Profile {
     return {
         name: configFormValue.name,
         inlineElements: getInlineElements(configFormValue.inlineElements),

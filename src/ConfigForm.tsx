@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {ErrorMessage, Field, Form, Formik, FormikHelpers} from 'formik';
 import {useTranslation} from "react-i18next";
-import {ConfigFormValues, configSchema, convertToConfig} from "./config";
+import {ProfileFormValues, configSchema, convertToConfig} from "./model/profile";
 import classNames from "classnames";
 import {useDispatch} from "react-redux";
 import {addConfigAction} from "./store/actions";
@@ -15,9 +15,9 @@ export function ConfigForm(): JSX.Element {
 
     const dispatch = useDispatch<AppThunkDispatch>();
 
-    const initialValue: ConfigFormValues = {name: '', inlineElements: ''};
+    const initialValue: ProfileFormValues = {name: '', inlineElements: ''};
 
-    function onSubmit(values: ConfigFormValues, {setSubmitting}: FormikHelpers<ConfigFormValues>): void {
+    function onSubmit(values: ProfileFormValues, {setSubmitting}: FormikHelpers<ProfileFormValues>): void {
         const config = convertToConfig(values);
 
         dispatch(addConfigAction(config));
