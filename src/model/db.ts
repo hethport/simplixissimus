@@ -54,3 +54,7 @@ export function getAllOpenedFilesFromIndexedDB(): Promise<MyXmlDocument[]> {
 export function saveOpenedFileToIndexedDB(file: MyXmlDocument): Promise<string> {
     return myDb.openedFilesTable.put(file);
 }
+
+export function updateProfileForDocument(profileName: string, fileName: string) {
+    return myDb.openedFilesTable.update(fileName, {profileName})
+}

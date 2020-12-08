@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {isElementNode, isPcData, maxAttrLength, MyXmlAttribute, MyXmlElementNode, MyXmlPCData} from "./model/xmlDocument";
+import {
+    isElementNode,
+    isPcData,
+    maxAttrLength,
+    MyXmlAttribute,
+    MyXmlElementNode,
+    MyXmlPCData
+} from "./model/xmlDocument";
 import classnames from "classnames";
 
 function renderAttributes(attributes: MyXmlAttribute[]): string | null {
@@ -58,6 +65,7 @@ export function XmlNodeButton({node, toggleNode, currentNode}: IProps): JSX.Elem
         </div>;
 
         if (node.childNodes.length === 1 && isPcData(node.childNodes[0])) {
+            // Single PCData child
             return (
                 <div className="field has-addons">
                     <div className="control">{startButton}</div>
@@ -66,36 +74,40 @@ export function XmlNodeButton({node, toggleNode, currentNode}: IProps): JSX.Elem
                 </div>
             );
         } else {
+
             if (state.hideChildNodes) {
                 return <div className="field has-addons">
                     <div className="control">{startButton}</div>
                     <div className="control">
-                        <button className="button is-warning"
-                                onClick={() => setState({hideChildNodes: false})}>
+                        <button className="button is-warning" onClick={() => setState({hideChildNodes: false})}>
                             <span className="is-italic">...</span>
                         </button>
                     </div>
                     <div className="control">{endButton}</div>
                 </div>
             } else {
-                return <>
-                    <div className="field has-addons">
-                        <div className="control">{startButton}</div>
-                        <div className="control">
-                            <button type="button" className="button"
-                                    onClick={() => setState({hideChildNodes: true})}>Hide...
-                            </button>
-                        </div>
+                return <div>
+                    <div>
+                        {startButton}
+                        <button type="button" className="button"
+                                onClick={() => setState({hideChildNodes: true})}>Hide...
+                        </button>
                     </div>
-                    {node.childNodes.map((childNode, index) =>
-                        isElementNode(childNode)
-                            ? <div key={index} className="xmlLine">
-                                <XmlNodeButton node={childNode} toggleNode={toggleNode} currentNode={currentNode}/>
+
+                    <div className="xmlChildren">
+                        {node.childNodes.map((childNode, index) =>
+                            <div key={index}>
+                                {isElementNode(childNode)
+                                    ?
+                                    <XmlNodeButton node={childNode} toggleNode={toggleNode} currentNode={currentNode}/>
+                                    : <span key={index}> {renderPcDataNode(childNode)}</span>
+                                }
                             </div>
-                            : <span key={index}> {renderPcDataNode(childNode)}</span>
-                    )}
+                        )}
+                    </div>
+
                     {endButton}
-                </>
+                </div>
             }
         }
     }

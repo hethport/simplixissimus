@@ -9,7 +9,7 @@ import {openFileAction, readFileAction} from "./store/actions";
 
 export function FilesMenu(): JSX.Element {
 
-    const {t} = useTranslation();
+    const {t} = useTranslation('');
 
     const fileInputRef = createRef<HTMLInputElement>();
 
@@ -44,11 +44,13 @@ export function FilesMenu(): JSX.Element {
     return (
         <div className="panel">
             <p className="panel-heading">{t('Geöffnete Dateien')}</p>
-            {openedFiles.map((of) =>
-                <div key={of.name} onClick={() => openFile(of.name)} className="panel-block">
-                    <button className={classNames('button', 'is-fullwidth', {'is-link': isActive(of.name)})}
-                            type="button">{of.name}</button>
-                </div>
+            {openedFiles.map((of) => {
+                    const classes = classNames('button', 'is-fullwidth', {'is-link': isActive(of.name)});
+
+                    return <div key={of.name} onClick={() => openFile(of.name)} className="panel-block">
+                        <button className={classes} type="button">{of.name}</button>
+                    </div>
+                }
             )}
             <div className="panel-block">
                 <input hidden={true} type="file" ref={fileInputRef} onChange={handleFileInputChange}/>

@@ -9,7 +9,7 @@ import {AppThunkDispatch} from "./store/store";
 
 export function ConfigForm(): JSX.Element {
 
-    const {t} = useTranslation();
+    const {t} = useTranslation('');
 
     const [configSaved, setConfigSaved] = useState<boolean>(false);
 

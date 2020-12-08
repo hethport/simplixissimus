@@ -2,27 +2,20 @@ import React from 'react';
 import {MyXmlDocument} from "./model/xmlDocument";
 import './XmlEditor.sass';
 import {XmlEditorPane} from './XmlEditorPane';
-import {useDispatch, useSelector} from "react-redux";
-import {AppThunkDispatch, selectActiveDocument} from "./store/store";
+import {useSelector} from "react-redux";
+import {activeDocumentSelector} from "./store/store";
 import {FilesMenu} from './FilesMenu';
 import {useTranslation} from "react-i18next";
-import {openFileAction} from "./store/actions";
 
 export function XmlEditor(): JSX.Element {
 
-    const {t} = useTranslation();
+    const {t} = useTranslation('');
 
-    const maybeDocument: MyXmlDocument | undefined = useSelector(selectActiveDocument);
-
-    const dispatch = useDispatch<AppThunkDispatch>();
-
-    if (maybeDocument) {
-        dispatch(openFileAction(maybeDocument.name));
-    }
+    const maybeDocument: MyXmlDocument | undefined = useSelector(activeDocumentSelector);
 
     return (
         <div className="columns">
-            <div className="column is-1">
+            <div className="column is-2">
                 <FilesMenu/>
             </div>
             <div className="column">

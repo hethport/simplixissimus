@@ -4,13 +4,13 @@ import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 import {configFormUrl} from './urls';
 import {useSelector} from "react-redux";
-import {allConfigs} from "./store/store";
+import {allProfilesSelector} from "./store/store";
 
 export function Configs(): JSX.Element {
 
-    const {t} = useTranslation();
+    const {t} = useTranslation('');
 
-    const configs: Profile[] = useSelector(allConfigs);
+    const configs: Profile[] = useSelector(allProfilesSelector);
 
     function renderConfigs(configs: Profile[]): JSX.Element {
         return <table className="table is-fullwidth">

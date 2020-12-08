@@ -3,7 +3,15 @@ import {MyXmlDocument} from "../model/xmlDocument";
 import {composeWithDevTools} from "redux-devtools-extension";
 import {Profile} from "../model/profile";
 import thunk, {ThunkAction, ThunkDispatch} from 'redux-thunk';
-import {ADD_CONFIG, addConfigAction, OPEN_FILE, READ_FILE, readFileAction, StoreAction} from "./actions";
+import {
+    ADD_PROFILE,
+    addConfigAction,
+    OPEN_FILE,
+    READ_FILE,
+    readFileAction,
+    StoreAction,
+    UPDATE_PROFILE
+} from "./actions";
 import {tlh_dig_config} from "../dummyData/dummyConfigs";
 import {getAllConfigsFromIndexedDB, getAllOpenedFilesFromIndexedDB} from "../model/db";
 import {kbo_11_51} from "../dummyData/kbo_11.51.xml";
@@ -16,26 +24,36 @@ export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, StoreState, un
 export interface StoreState {
     currentFileName?: string;
     openedFiles: MyXmlDocument[];
-    configs: Profile[];
+    profiles: Profile[];
 }
 
 export function rootReducer(
-    state: StoreState = {openedFiles: [], configs: []},
+    state: StoreState = {openedFiles: [], profiles: []},
     action: StoreAction
 ): StoreState {
     switch (action.type) {
         case READ_FILE:
             return {
-                ...state, openedFiles: [...state.openedFiles, action.readFile], currentFileName: action.readFile.name
+                ...state,
+                openedFiles: [...state.openedFiles, action.readFile],
+                currentFileName: action.openFile ? action.readFile.name : state.currentFileName
             };
         case OPEN_FILE:
             return {
                 ...state, currentFileName: action.fileName
             };
-        case ADD_CONFIG:
+        case ADD_PROFILE:
             return {
-                ...state, configs: [...state.configs, action.config]
+                ...state, profiles: [...state.profiles, action.profile]
             };
+        case UPDATE_PROFILE:
+            return {
+                ...state, openedFiles: state.openedFiles.map((openFile) => {
+                    return openFile.name === state.currentFileName
+                        ? {...openFile, profileName: action.profileName}
+                        : openFile;
+                })
+            }
         default:
             return state;
     }
@@ -51,7 +69,7 @@ export function currentDocumentNameSelector(store: StoreState): string | undefin
     return store.currentFileName;
 }
 
-export function selectActiveDocument(store: StoreState): MyXmlDocument | undefined {
+export function activeDocumentSelector(store: StoreState): MyXmlDocument | undefined {
     return store.currentFileName
         ? store.openedFiles.find((d) => d.name === store.currentFileName)
         : undefined;
@@ -61,8 +79,12 @@ export function selectDocumentByName(store: StoreState, name: string): MyXmlDocu
     return store.openedFiles.find((d) => d.name === name);
 }
 
-export function allConfigs(store: StoreState): Profile[] {
-    return store.configs;
+export function allProfilesSelector(store: StoreState): Profile[] {
+    return store.profiles;
+}
+
+export function profileByName(store: StoreState, name: string): Profile | undefined {
+    return store.profiles.find((p) => p.name === name);
 }
 
 // Store
@@ -81,7 +103,7 @@ export async function readInitialStore(): Promise<StoreState> {
     const openedFiles = await getAllOpenedFilesFromIndexedDB();
     const configs = await getAllConfigsFromIndexedDB();
 
-    return {currentFileName, openedFiles, configs};
+    return {currentFileName, openedFiles, profiles: configs};
 }
 
 
@@ -94,16 +116,16 @@ readInitialStore().then((initialStore) => {
         if (initialStore.openedFiles.length === 0) {
             initialStore.openedFiles = [kbo_11_51];
         }
-        if (initialStore.configs.length === 0) {
-            initialStore.configs = [tlh_dig_config];
+        if (initialStore.profiles.length === 0) {
+            initialStore.profiles = [tlh_dig_config];
         }
     }
 
     initialStore.openedFiles.forEach((openedFile) => {
-        store.dispatch(readFileAction(openedFile))
+        store.dispatch(readFileAction(openedFile, openedFile.name === initialStore.currentFileName))
     });
 
-    initialStore.configs.forEach((config) => {
+    initialStore.profiles.forEach((config) => {
         store.dispatch(addConfigAction(config))
     });
 });

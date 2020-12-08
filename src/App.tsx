@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 
 export function App(): JSX.Element {
 
-    const {t} = useTranslation();
+    const {t} = useTranslation('');
 
     return <>
         <nav className="navbar is-light">
