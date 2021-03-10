@@ -1,82 +1,51 @@
 import React, {useState} from 'react';
-import {ErrorMessage, Field, Form, Formik, FormikHelpers} from 'formik';
+import {Field, Form, Formik, FormikHelpers} from 'formik';
 import {useTranslation} from "react-i18next";
-import {ProfileFormValues, configSchema, convertToConfig} from "./model/profile";
-import classNames from "classnames";
+import {configSchema, convertToConfig, ProfileFormValues} from "./model/profile";
 import {useDispatch} from "react-redux";
 import {addConfigAction} from "./store/actions";
 import {AppThunkDispatch} from "./store/store";
+import {BulmaField} from "./BulmaField";
 
 export function ConfigForm(): JSX.Element {
 
-    const {t} = useTranslation('');
+  const {t} = useTranslation('');
+  const [configSaved, setConfigSaved] = useState<boolean>(false);
+  const dispatch = useDispatch<AppThunkDispatch>();
 
-    const [configSaved, setConfigSaved] = useState<boolean>(false);
+  const initialValue: ProfileFormValues = {name: '', inlineElements: ''};
 
-    const dispatch = useDispatch<AppThunkDispatch>();
+  function onSubmit(values: ProfileFormValues, {setSubmitting}: FormikHelpers<ProfileFormValues>): void {
+    dispatch(addConfigAction(convertToConfig(values)));
 
-    const initialValue: ProfileFormValues = {name: '', inlineElements: ''};
+    setConfigSaved(true);
 
-    function onSubmit(values: ProfileFormValues, {setSubmitting}: FormikHelpers<ProfileFormValues>): void {
-        const config = convertToConfig(values);
+    setSubmitting(false);
+  }
 
-        dispatch(addConfigAction(config));
+  return (
+    <div className="container">
+      <h1 className="title is-3 has-text-centered">{t('Neue Konfiguration erstellen')}</h1>
 
-        setConfigSaved(true);
+      <Formik initialValues={initialValue} validationSchema={configSchema} onSubmit={onSubmit}>
+        {({isSubmitting}) =>
 
-        setSubmitting(false);
-    }
+          <Form>
+            <Field name="name" id="name" label={t('Name')} component={BulmaField}/>
 
-    return (
-        <div className="container">
-            <h1 className="title is-3 has-text-centered">{t('Neue Konfiguration erstellen')}</h1>
+            <Field name="inlineElements" id="inlineElements" label={t('Inline Elemente, getrennt durch Komma')} component={BulmaField}/>
 
-            <Formik initialValues={initialValue} validationSchema={configSchema} onSubmit={onSubmit}>
-                {({isSubmitting, touched, errors}) =>
+            {configSaved && <div
+              className="notification is-success">{t('Konfiguration wurde erfolgreich gespeichert')}.</div>}
 
-                    <Form>
-                        <div className="field">
-                            <label htmlFor="name" className="label">{t('Name')}:</label>
-                            <div className="control">
-                                <Field type="text" name="name" placeholder={t('Name')}
-                                       className={classNames("input", {
-                                           'is-danger': touched.name && errors.name,
-                                           'is-success': touched.name && !errors.name
-                                       })}/>
-                                <ErrorMessage name="name">
-                                    {msg => <p className="help is-danger">{msg}</p>}
-                                </ErrorMessage>
-                            </div>
-                        </div>
+            <button type="submit" className="button is-link is-fullwidth" disabled={isSubmitting || configSaved}>
+              {t('Neue Konfiguration erstellen')}
+            </button>
 
-                        <div className="field">
-                            <label htmlFor="inlineElements" className="label">{t('Inline Elemente')}:</label>
-                            <div className="control">
-                                <Field type="text" name="inlineElements"
-                                       placeholder={t('Inline Elemente, getrennt durch Komma')}
-                                       className={classNames("input", {
-                                           'is-danger': touched.inlineElements && errors.inlineElements,
-                                           'is-success': touched.inlineElements && errors.inlineElements
-                                       })}/>
-                                <ErrorMessage name="inlineElements">
-                                    {msg => <p className="help is-danger">{msg}</p>}
-                                </ErrorMessage>
-                            </div>
-                        </div>
+          </Form>
+        }
+      </Formik>
 
-                        {configSaved && <div
-                            className="notification is-success">{t('Konfiguration wurde erfolgreich gespeichert')}.</div>}
-
-                        <div className="field">
-                            <button type="submit" className="button is-link is-fullwidth"
-                                    disabled={isSubmitting || configSaved}>
-                                {t('Neue Konfiguration erstellen')}
-                            </button>
-                        </div>
-                    </Form>
-                }
-            </Formik>
-
-        </div>
-    );
+    </div>
+  );
 }

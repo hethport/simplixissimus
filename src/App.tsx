@@ -6,7 +6,6 @@ import {Configs} from './Configs';
 import {ConfigForm} from './ConfigForm';
 import {useTranslation} from "react-i18next";
 
-
 export function App(): JSX.Element {
 
     const {t} = useTranslation('');
@@ -18,7 +17,6 @@ export function App(): JSX.Element {
             </div>
 
             <div className="navbar-start">
-
                 <Link to={configsUrl} className="navbar-item">{t('Konfigurationen')}</Link>
             </div>
         </nav>
@@ -30,7 +28,6 @@ export function App(): JSX.Element {
                 <Route path={homeUrl} component={XmlEditor}/>
             </Switch>
         </div>
-    </>
-
+    </>;
 }
 
