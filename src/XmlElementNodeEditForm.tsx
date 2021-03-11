@@ -11,10 +11,26 @@ interface IProps {
 
 export function XmlElementNodeEditForm({node, updateNode}: IProps) {
 
+  /*
+        <div className="columns">
+        <div className="column">
+          <div className="box">
+            {renderView(leftViewType)}
+            <XmlNodeButton node={document.rootNode} toggleNode={handleNodeClick}
+                           currentNode={state.editedNode}/>
+          </div>
+        </div>
+        <div className="column">
+          {state.editedNode &&
+          <XmlElementNodeEditForm node={state.editedNode} updateNode={handleNodeUpdate}/>}
+        </div>
+      </div>
+   */
+
     const {t} = useTranslation('common');
 
     function addAttribute() {
-        node.attributes.push({key: '', value: ''});
+        node.attributes.push({name: '', value: ''});
         updateNode(node);
     }
 
@@ -36,12 +52,12 @@ export function XmlElementNodeEditForm({node, updateNode}: IProps) {
     }
 
     function renderAttributeFields(attr: MyXmlAttribute, index: number): JSX.Element {
-        const key = attr.key.trim().length === 0 ? `___${index}` : attr.key;
+        const key = attr.name.trim().length === 0 ? `___${index}` : attr.name;
 
         return (
             <div key={key} className="field is-grouped">
                 <div className="control is-expanded">
-                    <input className="input" defaultValue={attr.key} placeholder={t('Schlüssel')}/>
+                    <input className="input" defaultValue={attr.name} placeholder={t('Schlüssel')}/>
                 </div>
                 <div className="control">
                     <button className="button is-static" tabIndex={-1}>=</button>

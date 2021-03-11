@@ -90,8 +90,8 @@ const kbo_11_51_xml: string = `
   </body>
 </AOxml>`;
 
-export const kbo_11_51: MyXmlDocument = new MyXmlDocument(
-    "kbo 11.51.xml",
-    readXmlString(kbo_11_51_xml) as MyXmlElementNode,
-    tlh_dig_config.name
-);
+export const kbo_11_51: MyXmlDocument = {
+  name: "kbo 11.51.xml",
+  rootNode: readXmlString(kbo_11_51_xml) as MyXmlElementNode,
+  profileName: tlh_dig_config.name
+};

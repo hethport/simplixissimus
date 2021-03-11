@@ -11,13 +11,13 @@ import classnames from "classnames";
 
 function renderAttributes(attributes: MyXmlAttribute[]): string | null {
     const attributesToRender = attributes
-        .filter((attr) => attr.key.trim().length !== 0);
+        .filter((attr) => attr.name.trim().length !== 0);
 
     if (attributesToRender.length === 0) {
         return null;
     } else {
         const renderedAttributes = attributesToRender
-            .map(({key, value}) => ` ${key}="${value}"`)
+            .map(({name, value}) => ` ${name}="${value}"`)
             .join('');
 
         return renderedAttributes.length > maxAttrLength
