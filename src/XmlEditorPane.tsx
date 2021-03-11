@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from "react";
-import {XmlNodeButton} from "./XmlNodeButton";
+import {XmlNodeButton} from "./views/XmlNodeButton";
 import {MyXmlDocument, MyXmlElementNode} from "./model/xmlDocument";
 import {useSelector} from "react-redux";
 import {allProfilesSelector, profileByName, StoreState} from "./store/store";
@@ -7,6 +7,7 @@ import {Profile} from "./model/profile";
 import {ViewType} from "./model/views";
 import {EditorView} from "./views/EditorView";
 import {TextView} from "./views/TextView";
+import {XmlRenderView} from "./views/XmlRenderView";
 
 interface IState {
   editedNode?: MyXmlElementNode;
@@ -14,9 +15,11 @@ interface IState {
 
 interface IProps {
   document: MyXmlDocument;
+  leftViewType: ViewType;
+  rightViewType: ViewType;
 }
 
-export function XmlEditorPane({document}: IProps): JSX.Element {
+export function XmlEditorPane({document, leftViewType, rightViewType}: IProps): JSX.Element {
 
   const [state, setState] = useState<IState>({});
 
@@ -40,17 +43,16 @@ export function XmlEditorPane({document}: IProps): JSX.Element {
     console.info(event.target.value);
   }
 
-  const leftViewType: ViewType = ViewType.Text;
-  const rightViewType: ViewType = ViewType.Editor;
-
   function renderView(viewType: ViewType): JSX.Element {
     switch (viewType) {
       case ViewType.Editor:
         return <EditorView document={document}/>;
       case ViewType.SimpliXissimus:
-        return <XmlNodeButton node={document.rootNode} toggleNode={handleNodeUpdate}/>
+        return <XmlNodeButton node={document.rootNode} toggleNode={handleNodeUpdate}/>;
       case ViewType.Text:
-        return <TextView document={document}/>
+        return <TextView document={document}/>;
+      case ViewType.XmlRendered:
+        return <XmlRenderView document={document}/>;
     }
   }
 

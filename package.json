@@ -37,6 +37,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/redux-thunk": "^2.1.0",
     "@types/yup": "^0.29.11",
+    "chokidar": "^3.5.1",
     "i18next-parser": "^3.7.0",
     "node-sass": "^5.0.0",
     "redux-devtools-extension": "^2.13.9",

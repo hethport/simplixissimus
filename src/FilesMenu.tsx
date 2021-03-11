@@ -2,28 +2,45 @@ import React, {ChangeEvent, createRef} from "react";
 import classNames from "classnames";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {allDocumentsSelector, AppThunkDispatch, currentDocumentNameSelector} from "./store/store";
+import {activeDocumentSelector, allDocumentsSelector, AppThunkDispatch} from "./store/store";
 import {MyXmlDocument} from "./model/xmlDocument";
 import {readXmlFile} from "./model/xmlReader";
 import {openFileAction, readFileAction} from "./store/actions";
+import {ViewType} from "./model/views";
+import {IStateUpdate} from "./XmlEditor";
+import {BulmaObjectSelect} from "./BulmaField";
 
-export function FilesMenu(): JSX.Element {
+interface IProps {
+  currentLeftView: ViewType;
+  currentRightView: ViewType;
+  updateViews: (s: IStateUpdate) => void;
+}
+
+const viewOptions: { value: ViewType, label: string }[] = [
+  {value: ViewType.Editor, label: 'Editor'},
+  {value: ViewType.XmlRendered, label: 'XmlRendered'},
+  {value: ViewType.SimpliXissimus, label: 'SimpliXissimus'},
+  {value: ViewType.Text, label: 'Text'}
+];
+
+export function FilesMenu({currentLeftView, currentRightView, updateViews}: IProps): JSX.Element {
 
   const {t} = useTranslation('');
-
-  const fileInputRef = createRef<HTMLInputElement>();
-
   const dispatch = useDispatch<AppThunkDispatch>();
-
-  const activeDocumentName: string | undefined = useSelector(currentDocumentNameSelector);
+  const activeDocument: MyXmlDocument | undefined = useSelector(activeDocumentSelector);
   const openedFiles: MyXmlDocument[] = useSelector(allDocumentsSelector);
+
+  /**
+   * @deprecated
+   */
+  const fileInputRef = createRef<HTMLInputElement>();
 
   function openFile(fileName: string): void {
     dispatch(openFileAction(fileName));
   }
 
   function isActive(fileName: string): boolean {
-    return !!activeDocumentName && fileName === activeDocumentName;
+    return !!activeDocument && fileName === activeDocument.name;
   }
 
   function handlePlusButtonClick(): void {
@@ -41,20 +58,45 @@ export function FilesMenu(): JSX.Element {
   }
 
   return (
-    <div className="panel">
-      <p className="panel-heading">{t('Geöffnete Dateien')}</p>
-      {openedFiles.map((of) => {
-          const classes = classNames('button', 'is-fullwidth', {'is-link': isActive(of.name)});
+    <>
+      <div className="block">
+        <div className="card">
+          <header className="card-header">
+            <p className="card-header-title">{t('Geöffnete Dateien')}</p>
+          </header>
+          <div className="card-content">
+            {openedFiles.map((of) =>
+              <p key={of.name}>
+                <a onClick={() => openFile(of.name)} className={classNames({'is-active': isActive(of.name)})}>
+                  {of.name}
+                </a>
+              </p>
+            )}
 
-          return <div key={of.name} onClick={() => openFile(of.name)} className="panel-block">
-            <button className={classes} type="button">{of.name}</button>
+            <div className="my-3">
+              <input hidden={true} type="file" ref={fileInputRef} onChange={handleFileInputChange}/>
+              <button className="button is-info is-fullwidth" type="button" onClick={handlePlusButtonClick}>+</button>
+            </div>
           </div>
-        }
-      )}
-      <div className="panel-block">
-        <input hidden={true} type="file" ref={fileInputRef} onChange={handleFileInputChange}/>
-        <button className="button is-info is-fullwidth" type="button" onClick={handlePlusButtonClick}>+</button>
+        </div>
       </div>
-    </div>
+
+      {activeDocument && <div className="block">
+        <div className="card">
+          <header className="card-header">
+            <p className="card-header-title">{t('currentFile')}:&nbsp;<code>{activeDocument?.name}</code></p>
+          </header>
+
+
+          <div className="card-content">
+            <BulmaObjectSelect label={t('leftView')} id="leftView" currentValue={currentLeftView} options={viewOptions}
+                               onUpdate={(value) => updateViews({leftViewType: value})}/>
+
+            <BulmaObjectSelect label={t('rightView')} id="rightView" currentValue={currentRightView} options={viewOptions}
+                               onUpdate={(value) => updateViews({rightViewType: value})}/>
+          </div>
+        </div>
+      </div>}
+    </>
   );
 }

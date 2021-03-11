@@ -57,7 +57,7 @@ export function allDocumentsSelector(store: StoreState): MyXmlDocument[] {
   return store.openedFiles;
 }
 
-export function currentDocumentNameSelector(store: StoreState): string | undefined {
+export function activeDocumentNameSelector(store: StoreState): string | undefined {
   return store.currentFileName;
 }
 

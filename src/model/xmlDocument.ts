@@ -62,11 +62,11 @@ function getNodeText(node: MyXmlNode): string[] {
   }
 }
 
-function getNodeSource(node: MyXmlNode, indentLevel: number = 0): string {
+function getNodeSource(node: MyXmlNode, indentLevel: number = 0): string[] {
   const indent = ' '.repeat(indentLevel * 2);
 
   if (isPcData(node)) {
-    return indent + node.content;
+    return [indent + node.content];
   }
 
   const {tagName, childNodes, attributes, isEmpty} = node;
@@ -74,16 +74,19 @@ function getNodeSource(node: MyXmlNode, indentLevel: number = 0): string {
   const renderedAttrs = attributes.length === 0 ? '' : ' ' + attributes.map(renderAttribute).join(' ');
 
   if (isEmpty) {
-    return `${indent}<${tagName}${renderedAttrs}/>`;
+    return [indent + `<${tagName}${renderedAttrs}/>`];
   }
 
   if (childNodes.length === 1 && isPcData(childNodes[0])) {
-    return `${indent}<${tagName}${renderedAttrs}>${childNodes[0].content}</${tagName}>`;
+    return [indent + `<${tagName}${renderedAttrs}>${childNodes[0].content}</${tagName}>`];
   }
 
-  return `${indent}<${tagName}${renderedAttrs}>
-${childNodes.map((n) => getNodeSource(n, indentLevel + 1)).join('\n')}
-${indent}</${tagName}>`;
+  return [
+    indent + `<${tagName}${renderedAttrs}>`,
+    ...childNodes.flatMap((n) => getNodeSource(n, indentLevel + 1)),
+    indent + `</${tagName}>`
+  ];
+
 }
 
 
@@ -100,7 +103,11 @@ export function getDocumentText({rootNode}: MyXmlDocument): string[] {
     .filter((t) => t.trim().length !== 0);
 }
 
-export function getXmlDocumentSource({rootNode}: MyXmlDocument): string {
+export function getDocumentSourceLines({rootNode}: MyXmlDocument): string[] {
   return getNodeSource(rootNode);
+}
+
+export function getXmlDocumentSource(document: MyXmlDocument): string {
+  return getDocumentSourceLines(document).join('\n');
 }
 
